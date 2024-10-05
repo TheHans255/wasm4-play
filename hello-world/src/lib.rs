@@ -1,27 +1,18 @@
 #[cfg(feature = "buddy-alloc")]
 mod alloc;
+mod assets;
+mod sprite;
 mod wasm4;
 mod wasm4_mmio;
+use assets::BALL_SPRITE;
 use wasm4::{blit, text, BLIT_1BPP, BUTTON_1, BUTTON_DOWN, BUTTON_LEFT, BUTTON_RIGHT, BUTTON_UP};
-use wasm4_mmio::{DRAW_COLORS, GAMEPAD1, PALETTE};
+use wasm4_mmio::{DRAW_COLORS, GAMEPAD1, PALETTE, FRAMEBUFFER};
 
 // Palettes from https://itch.io/jam/gbpixelartjam24
 const PALETTE_BLOOD_TIDE: [u32; 4] = [0x652121, 0x394a5a, 0x7a968d, 0xfffeea];
 const PALETTE_FORGOTTEN_SWAMP: [u32; 4] = [0x3b252e, 0x593a5f, 0x4d7d65, 0xd1ada1];
 const PALETTE_HOMEWORK: [u32; 4] = [0x12121b, 0x45568d, 0x878c9d, 0xe1d8d4];
 const PALETTE_MANGAVANIA: [u32; 4] = [0x6e1a4b, 0xe64ca4, 0x4aedff, 0xffffff];
-
-#[rustfmt::skip]
-const SMILEY: [u8; 8] = [
-    0b11000011,
-    0b10000001,
-    0b00100100,
-    0b00100100,
-    0b00000000,
-    0b00100100,
-    0b10011001,
-    0b11000011,
-];
 
 #[no_mangle]
 fn start() {
@@ -30,6 +21,10 @@ fn start() {
 
 #[no_mangle]
 fn update() {
+    // clear buffer to color 3
+    unsafe { FRAMEBUFFER.as_volblock().iter().for_each(
+        |addr| { addr.write(0xff) }) 
+    }
     DRAW_COLORS.write(0x0002);
     text("Hello from Rust!", 10, 10);
 
@@ -47,9 +42,10 @@ fn update() {
         PALETTE.write(PALETTE_MANGAVANIA);
     }
     if gamepad & BUTTON_1 != 0 {
-        DRAW_COLORS.write(0x0004);
+        DRAW_COLORS.write(0x4321);
     }
 
-    blit(&SMILEY, 76, 76, 8, 8, BLIT_1BPP);
+    BALL_SPRITE.draw(76, 76, 0);
+
     text("Press X to blink", 16, 90);
 }
