@@ -1,13 +1,11 @@
 /// A set of VolAddress definitions that allow us to avoid using unsafe declarations
 /// while pointing to memory everywhere
-
 pub use voladdress::{Safe, VolAddress};
 
 macro_rules! wasm4_mmio {
-  ($addr:literal, $name:ident, $t:ty, $r:ty, $w:ty) => {
-    pub const $name: VolAddress<$t, $r, $w> =
-    unsafe { VolAddress::new($addr) };
-  };
+    ($addr:literal, $name:ident, $t:ty, $r:ty, $w:ty) => {
+        pub const $name: VolAddress<$t, $r, $w> = unsafe { VolAddress::new($addr) };
+    };
 }
 
 wasm4_mmio!(0x0004, PALETTE, [u32; 4], Safe, Safe);
