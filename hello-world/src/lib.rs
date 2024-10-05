@@ -6,7 +6,7 @@ mod wasm4;
 mod wasm4_mmio;
 use assets::BALL_SPRITE;
 use wasm4::{blit, text, BLIT_1BPP, BUTTON_1, BUTTON_DOWN, BUTTON_LEFT, BUTTON_RIGHT, BUTTON_UP};
-use wasm4_mmio::{DRAW_COLORS, GAMEPAD1, PALETTE, FRAMEBUFFER};
+use wasm4_mmio::{DRAW_COLORS, FRAMEBUFFER, GAMEPAD1, PALETTE};
 
 // Palettes from https://itch.io/jam/gbpixelartjam24
 const PALETTE_BLOOD_TIDE: [u32; 4] = [0x652121, 0x394a5a, 0x7a968d, 0xfffeea];
@@ -22,8 +22,7 @@ fn start() {
 #[no_mangle]
 fn update() {
     // clear buffer to color 3
-    FRAMEBUFFER.iter().for_each(
-        |addr| { addr.write(0xff) });
+    FRAMEBUFFER.iter().for_each(|addr| addr.write(0xff));
     DRAW_COLORS.write(0x0002);
     text("Hello from Rust!", 10, 10);
 
