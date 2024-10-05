@@ -4,7 +4,7 @@ mod assets;
 mod sprite;
 mod wasm4;
 mod wasm4_mmio;
-use assets::BALL_SPRITE;
+use assets::{BALL_SPRITE, BOLD_7X5_FONT};
 use wasm4::{blit, text, BLIT_1BPP, BUTTON_1, BUTTON_DOWN, BUTTON_LEFT, BUTTON_RIGHT, BUTTON_UP};
 use wasm4_mmio::{DRAW_COLORS, FRAMEBUFFER, GAMEPAD1, PALETTE};
 
@@ -24,7 +24,7 @@ fn update() {
     // clear buffer to color 3
     FRAMEBUFFER.iter().for_each(|addr| addr.write(0xff));
     DRAW_COLORS.write(0x0002);
-    text("Hello from Rust!", 10, 10);
+    BOLD_7X5_FONT.draw_string("Hello from Rust!", 10, 10);
 
     let gamepad = GAMEPAD1.read();
     if gamepad & BUTTON_UP != 0 {
@@ -45,5 +45,5 @@ fn update() {
 
     BALL_SPRITE.draw(76, 76, 0);
 
-    text("Press X to blink", 16, 90);
+    BOLD_7X5_FONT.draw_string("Press X to blink", 16, 100);
 }
