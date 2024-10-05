@@ -22,9 +22,8 @@ fn start() {
 #[no_mangle]
 fn update() {
     // clear buffer to color 3
-    unsafe { FRAMEBUFFER.as_volblock().iter().for_each(
-        |addr| { addr.write(0xff) }) 
-    }
+    FRAMEBUFFER.iter().for_each(
+        |addr| { addr.write(0xff) });
     DRAW_COLORS.write(0x0002);
     text("Hello from Rust!", 10, 10);
 

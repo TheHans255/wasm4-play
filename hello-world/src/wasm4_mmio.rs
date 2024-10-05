@@ -1,3 +1,4 @@
+use voladdress::VolBlock;
 /// A set of VolAddress definitions that allow us to avoid using unsafe declarations
 /// while pointing to memory everywhere
 pub use voladdress::{Safe, VolAddress};
@@ -19,4 +20,5 @@ wasm4_mmio!(0x001c, MOUSE_Y, i16, Safe, ());
 wasm4_mmio!(0x001e, MOUSE_BUTTONS, u8, Safe, ());
 wasm4_mmio!(0x001f, SYSTEM_FLAGS, u8, Safe, Safe);
 wasm4_mmio!(0x0020, NETPLAY, u8, Safe, ());
-wasm4_mmio!(0x00a0, FRAMEBUFFER, [u8; 6400], Safe, Safe);
+
+pub const FRAMEBUFFER: VolBlock<u8, Safe, Safe, 6400> = unsafe { VolBlock::new(0x00a0) };
