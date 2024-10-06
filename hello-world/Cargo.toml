@@ -8,7 +8,8 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-buddy-alloc = { version = "0.4.1", optional = true }
+buddy-alloc = "0.4.1"
+sync-unsafe-cell = "0.1.1"
 voladdress = "1.4.0"
 
 [profile.release]
@@ -17,4 +18,3 @@ lto = true
 
 [features]
 # use `--no-default-features` or comment out next line to disable allocator
-default = ["buddy-alloc"]

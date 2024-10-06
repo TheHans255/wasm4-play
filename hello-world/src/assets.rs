@@ -1,4 +1,7 @@
-use crate::sprite::{Sprite, SpriteFont, Texture2Color, Texture4Color};
+use crate::{
+    sfx::{ChannelMode, Frequency, MusicNote, PanMode, Rest, Track, TrackItem},
+    sprite::{Sprite, SpriteFont, Texture2Color, Texture4Color},
+};
 
 const BALL_TEXTURE_DATA: [u8; 64] = [
     0x55, 0x50, 0x05, 0x55, 0x55, 0x00, 0x8c, 0x55, 0x54, 0x00, 0x23, 0x15, 0x50, 0x08, 0xcf, 0xc5,
@@ -60,4 +63,67 @@ pub const BOLD_7X5_FONT: SpriteFont<Texture2Color<'static>> = SpriteFont {
     texture: &BOLD_7X5_FONT_TEXTURE,
     horizontal_padding: 1,
     draw_colors: 0x0010,
+};
+
+macro_rules! simple_music_note {
+    ($midi_note:expr, $duration:expr, $volume:expr) => {
+        TrackItem::Note(MusicNote {
+            channel_mode: ChannelMode::Triangle,
+            duration_attack: 0,
+            duration_decay: 0,
+            duration_release: 1,
+            duration_sustain: $duration - 1,
+            frequency_end: Frequency::Zero,
+            frequency_start: Frequency::MIDINote($midi_note, 0),
+            volume_attack: 0,
+            volume_sustain: $volume,
+            pan_mode: PanMode::Center,
+        })
+    };
+}
+macro_rules! simple_music_rest {
+    ($duration:expr) => {
+        TrackItem::Rest(Rest {
+            duration: $duration,
+        })
+    };
+}
+
+const TOTAKAS_SONG_DATA: [TrackItem; 32] = [
+    simple_music_note!(60, 12, 50),
+    simple_music_rest!(12),
+    simple_music_note!(60, 6, 50),
+    simple_music_note!(62, 6, 50),
+    simple_music_note!(64, 12, 50),
+    simple_music_rest!(12),
+    simple_music_note!(62, 12, 50),
+    simple_music_note!(60, 12, 50),
+    simple_music_rest!(24),
+    simple_music_note!(67, 12, 50),
+    simple_music_rest!(24),
+    simple_music_note!(64, 12, 50),
+    simple_music_rest!(24),
+    simple_music_note!(72, 12, 50),
+    simple_music_rest!(24),
+    simple_music_note!(67, 12, 50),
+    simple_music_rest!(60),
+    simple_music_note!(67, 12, 50),
+    simple_music_rest!(12),
+    simple_music_note!(67, 6, 50),
+    simple_music_note!(68, 6, 50),
+    simple_music_note!(67, 12, 50),
+    simple_music_rest!(12),
+    simple_music_note!(66, 12, 50),
+    simple_music_note!(63, 12, 50),
+    simple_music_rest!(60),
+    simple_music_note!(62, 12, 50),
+    simple_music_rest!(24),
+    simple_music_note!(67, 12, 50),
+    simple_music_rest!(24),
+    simple_music_note!(60, 12, 50),
+    simple_music_rest!(60),
+];
+pub const TOTAKAS_SONG: Track<'static> = Track {
+    items: &TOTAKAS_SONG_DATA,
+    priority: 1000,
 };
